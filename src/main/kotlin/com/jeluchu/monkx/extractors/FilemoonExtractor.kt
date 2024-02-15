@@ -8,7 +8,7 @@ import okhttp3.Headers
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.jsoup.Jsoup
 
-class FilemoonExtractor() {
+class FilemoonExtractor {
     fun videosFromUrl(url: String, prefix: String = "Filemoon - ", headers: Headers? = null): List<Video> {
         return runCatching {
             val httpUrl = url.toHttpUrl()

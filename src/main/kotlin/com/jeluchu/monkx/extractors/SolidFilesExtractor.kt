@@ -3,7 +3,7 @@ package com.jeluchu.monkx.extractors
 import com.jeluchu.monkx.core.models.common.Video
 import org.jsoup.Jsoup
 
-class SolidFilesExtractor() {
+class SolidFilesExtractor {
     fun videosFromUrl(url: String, prefix: String = ""): List<Video> {
         val videoList = mutableListOf<Video>()
         return try {
