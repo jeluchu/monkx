@@ -20,6 +20,7 @@ kotlin-logging-jvm = { module = "io.github.oshai:kotlin-logging-jvm", version.re
 jupiter-junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "jupiter-junit" }
 jupiter-junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "jupiter-junit" }
 org-jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
+datlag-jsunpacker = "dev.datlag.jsunpacker:jsunpacker:1.0.1"
 
 
 [bundles]
@@ -29,6 +30,10 @@ kotlin-coroutines = [
 
 jsoup = [
     "org-jsoup"
+]
+
+jsunpacker = [
+    "datlag-jsunpacker"
 ]
 
 logger = [

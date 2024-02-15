@@ -1,7 +1,7 @@
 package com.jeluchu.monkx.core.connection
 
 import com.jeluchu.monkx.core.client.MonkxClient
-import com.jeluchu.monkx.core.exception.JikanException
+import com.jeluchu.monkx.core.exception.MonkxException
 import com.jeluchu.monkx.core.utils.Log
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
@@ -36,7 +36,7 @@ class RestClient(private val isDebug: Boolean = false, private val url: String? 
                     val ex = Exception("An internal server error has occurred, code: ${response.status.value}")
                     if (isDebug) throw ex else exceptionHandler(ex)
                 } else {
-                    val ex = JikanException(
+                    val ex = MonkxException(
                         "Jikan API returns code ${response.status.value} and body ${body?.toString()}",
                         response.status.value
                     )

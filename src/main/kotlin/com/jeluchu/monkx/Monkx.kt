@@ -1,12 +1,19 @@
 package com.jeluchu.monkx
 
 import com.jeluchu.monkx.core.connection.RestClient
+import com.jeluchu.monkx.core.models.common.Video
 import com.jeluchu.monkx.core.utils.extractValue
+import com.jeluchu.monkx.extractors.FilemoonExtractor
+import com.jeluchu.monkx.extractors.OkruExtractor
+import com.jeluchu.monkx.extractors.SolidFilesExtractor
+import com.jeluchu.monkx.extractors.StreamTapeExtractor
 import com.jeluchu.monkx.models.anime.AnimeEpisode
 import com.jeluchu.monkx.models.anime.AnimeInfo
 import com.jeluchu.monkx.models.search.AnimeSearch
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 object Monkx {
     private var restClient = RestClient()
@@ -81,5 +88,40 @@ object Monkx {
             episodesCount = episodes.count(),
             episodes = episodes
         )
+    }
+
+
+    /**
+     * Function to get links of servers for anime episodes.
+     * @return Links of servers
+     * @see Video
+     */
+    @OptIn(ExperimentalEncodingApi::class)
+    suspend fun getServers(id: String): List<Video> {
+        val html = restClient.request("ver/${id}")
+        val document: Document = Jsoup.parse(html)
+
+        val videoList = mutableListOf<Video>()
+        document.select("div.heroarea div.row div.col-md-12 ul.dropcaps li").forEach { server ->
+            val urlBase64 = server.select("a").attr("data-player")
+            val url = Base64.decode(urlBase64).toString(Charsets.UTF_8).substringAfter("=")
+
+            when {
+                url.contains("ok") -> if (!url.contains("streamcherry")) videoList.addAll(
+                    OkruExtractor().videosFromUrl(url)
+                )
+                url.contains("streamtape") -> {
+                    val videos = StreamTapeExtractor().videosFromUrl(url)
+                    videoList.addAll(videos)
+                }
+                url.contains("solidfiles") -> videoList.addAll(SolidFilesExtractor().videosFromUrl(url))
+                url.contains("filemoon") -> {
+                    val videos = FilemoonExtractor().videosFromUrl(url)
+                    videoList.addAll(videos)
+                }
+            }
+        }
+
+        return videoList
     }
 }

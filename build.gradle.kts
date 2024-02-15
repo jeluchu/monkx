@@ -14,12 +14,13 @@ repositories {
 }
 
 group = "com.jeluchu.monkx"
-version = "0.0.1"
+version = "0.2.0"
 
 dependencies {
     implementation(libs.bundles.ktor)
     implementation(libs.bundles.jsoup)
     implementation(libs.bundles.logger)
+    implementation(libs.bundles.jsunpacker)
     testImplementation(libs.jupiter.junit.api)
     testRuntimeOnly(libs.jupiter.junit.engine)
     implementation(libs.bundles.kotlin.coroutines)
@@ -48,7 +49,7 @@ publishing {
         create<MavenPublication>("maven") {
             groupId = "com.github.jeluchu"
             artifactId = "monkx"
-            version = "0.1.0"
+            version = "0.2.0"
 
             from(components["kotlin"])
         }
