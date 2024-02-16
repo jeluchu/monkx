@@ -15,12 +15,12 @@ data class AnimeSearch(
     val image: String,
 
     /**
-     * Image for anime.
+     * Type for video (Anime, Movie, etc).
      */
     val type: String,
 
     /**
-     * Image for anime.
+     * Year for anime.
      */
     val year: String
 )

@@ -1,5 +1,5 @@
 
-![JikanKt Banner](https://raw.githubusercontent.com/jeluchu/monkx/develop/assets/monkx.png)    
+![Monkx Banner](https://raw.githubusercontent.com/jeluchu/monkx/develop/assets/monkx.png)    
 [![Discord Server](https://img.shields.io/discord/460491088004907029.svg?style=flat&logo=discord)](https://discord.gg/2DZHfxv9XN)  [![](https://jitpack.io/v/jeluchu/monkx.svg)](https://jitpack.io/#jeluchu/monkx)
 
 Wrapper for [MonosChinos Web](https://monoschinos2.com/) build using Kotlin + Kotlin DSL + Coroutines power 🚀

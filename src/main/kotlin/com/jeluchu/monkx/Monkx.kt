@@ -1,19 +1,22 @@
 package com.jeluchu.monkx
 
 import com.jeluchu.monkx.core.connection.RestClient
-import com.jeluchu.monkx.core.models.common.Video
-import com.jeluchu.monkx.core.utils.extractValue
-import com.jeluchu.monkx.extractors.OkruExtractor
-import com.jeluchu.monkx.extractors.StreamTapeExtractor
-import com.jeluchu.monkx.extractors.VoeExtractor
-import com.jeluchu.monkx.models.anime.AnimeEpisode
 import com.jeluchu.monkx.models.anime.AnimeInfo
+import com.jeluchu.monkx.models.broadcast.Broadcast
+import com.jeluchu.monkx.models.calendar.WeekCalendar
+import com.jeluchu.monkx.models.episodes.Episode
 import com.jeluchu.monkx.models.search.AnimeSearch
 import com.jeluchu.monkx.models.servers.Server
+import com.jeluchu.monkx.scrapper.extractAnime
+import com.jeluchu.monkx.scrapper.extractBroadcast
+import com.jeluchu.monkx.scrapper.extractCalendar
+import com.jeluchu.monkx.scrapper.extractEpisodes
+import com.jeluchu.monkx.scrapper.extractSearch
+import com.jeluchu.monkx.scrapper.extractServers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import kotlin.io.encoding.Base64
-import kotlin.io.encoding.ExperimentalEncodingApi
 
 object Monkx {
     private var restClient = RestClient()
@@ -23,109 +26,58 @@ object Monkx {
      * @return List of anime that have a similar title to the one in the query
      * @see AnimeSearch
      */
-    suspend fun getSearchAnime(anime: String): List<AnimeSearch> {
-        val animes = mutableListOf<AnimeSearch>()
-        val html = restClient.request("buscar?q=${anime.replace(" ", "+")}")
-        val document: Document = Jsoup.parse(html)
-        val results = document.select(".heromain .series")
-
-        for (result in results) {
-            val info = result.select(".seriesinfo").text().orEmpty().split(" · ")
-            val title = result.select(".seristitles").text().orEmpty()
-            val image = result.select(".animemainimg").attr("src").orEmpty()
-
-            animes.add(
-                AnimeSearch(
-                    title = title,
-                    image = image,
-                    type = info[0],
-                    year = if (info.size < 2) "" else info[1]
-                )
-            )
-        }
-
-        return animes
-    }
+    suspend fun getSearchAnime(anime: String): List<AnimeSearch> =
+        restClient.request("buscar?q=${anime.replace(" ", "+")}").extractSearch()
 
     /**
      * Function to get all information of anime.
      * @return Anime information
      * @see AnimeInfo
      */
-    suspend fun getAnime(anime: String): AnimeInfo {
-        val html = restClient.request("anime/${anime}")
-        val document: Document = Jsoup.parse(html)
-        val result = document.select(".heromain")
-
-        val title = result.select("div.chapterdetails h1").text().orEmpty()
-        val image = result.select("div.chapterpic img[src]").attr("src").orEmpty()
-        val cover = result.select("div.herobg img[src]").first()?.attr("src").orEmpty()
-        val synopsis = result.select("div.chapterdetails p.textComplete").text().replace(" Ver menos", "")
-        val state = extractValue(document, "Estado").orEmpty()
-        val type = extractValue(document, "Tipo").orEmpty()
-
-        val genres = mutableListOf<String>()
-        result.select("div.chapterdetls2 td a").forEach { genres.add(it.text()) }
-
-        val episodes = mutableListOf<AnimeEpisode>()
-        document.select(".allanimes .col-item").forEachIndexed { index, episode ->
-            episodes.add(
-                AnimeEpisode(
-                    number = index + 1,
-                    id = episode.select("a").attr("href").replace("https://monoschinos2.com/ver/", ""),
-                )
-            )
-        }
-
-        return AnimeInfo(
-            title = title,
-            image = image,
-            cover = cover,
-            synopsis = synopsis,
-            state = state,
-            type = type,
-            genres = genres,
-            episodesCount = episodes.count(),
-            episodes = episodes
-        )
-    }
-
+    suspend fun getAnime(anime: String): AnimeInfo =
+        restClient.request("anime/${anime}").extractAnime()
 
     /**
      * Function to get links of servers for anime episodes.
-     * @return Links of servers
-     * @see Video
+     * @return List of servers
+     * @see Server
      */
-    @OptIn(ExperimentalEncodingApi::class)
-    suspend fun getServers(id: String): List<Server> {
-        val html = restClient.request("ver/${id}")
-        val document: Document = Jsoup.parse(html)
+    suspend fun getServers(id: String): List<Server> =
+        restClient.request("ver/${id}").extractServers()
 
-        val videoList = mutableListOf<Server>()
-        document.select("div.heroarea div.row div.col-md-12 ul.dropcaps li").forEach { server ->
-            val urlBase64 = server.select("a").attr("data-player")
-            val url = Base64.decode(urlBase64).toString(Charsets.UTF_8).substringAfter("=")
+    /**
+     * Function to get the latest uploaded episodes.
+     * @return List of episodes
+     * @see Episode
+     */
+    suspend fun getLastEpisodes(): List<Episode> =
+        restClient.request().extractEpisodes()
 
-            when {
-                url.contains("ok") -> if (!url.contains("streamcherry")) videoList.add(
-                    OkruExtractor().videosFromUrl(url)
-                )
-                url.contains("streamtape") -> {
-                    val videos = StreamTapeExtractor().videosFromUrl(url)
-                    videoList.addAll(videos)
-                }
-                url.contains("voe") -> {
-                    val videos = VoeExtractor().videosFromUrl(url)
-                    videoList.addAll(videos)
-                }
-                //url.contains("solidfiles") -> videoList.addAll(SolidFilesExtractor().videosFromUrl(url))
-                //url.contains("filemoon") -> {
-                //    val videos = FilemoonExtractor().videosFromUrl(url)
-                //    videoList.addAll(videos)
-                //}
+    /**
+     * Function to get animes in the week.
+     * @return List of animes
+     * @see WeekCalendar
+     */
+    suspend fun getCalendar(): WeekCalendar =
+        restClient.request("calendario").extractCalendar()
+
+
+    /**
+     * Function to get the anime that are currently on air.
+     * @return Links of animes
+     * @see Broadcast
+     */
+    suspend fun getBroadcast(): List<Broadcast> {
+        val firstPage = restClient.request("emision")
+        val document: Document = Jsoup.parse(firstPage)
+        val paginationElements = document.select("div.pagination ul.pagination li.page-item:not(.disabled) a.page-link")
+
+        return document.extractBroadcast().apply {
+            for (page in 2..paginationElements.size) {
+                val reqPage = restClient.request("emision?p=$page")
+                addAll(Jsoup.parse(reqPage).extractBroadcast())
+                runBlocking { delay(3000) }
             }
         }
-
-        return videoList
     }
 }

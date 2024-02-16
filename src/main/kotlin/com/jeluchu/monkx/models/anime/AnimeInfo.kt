@@ -1,7 +1,7 @@
 package com.jeluchu.monkx.models.anime
 
 /**
- * AnimeEpisode data class.
+ * AnimeInfo data class.
  */
 data class AnimeInfo(
     /**

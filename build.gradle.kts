@@ -14,7 +14,7 @@ repositories {
 }
 
 group = "com.jeluchu.monkx"
-version = "0.2.0"
+version = "1.0.0"
 
 dependencies {
     implementation(libs.bundles.ktor)
@@ -49,7 +49,7 @@ publishing {
         create<MavenPublication>("maven") {
             groupId = "com.github.jeluchu"
             artifactId = "monkx"
-            version = "0.2.0"
+            version = "1.0.0"
 
             from(components["kotlin"])
         }
