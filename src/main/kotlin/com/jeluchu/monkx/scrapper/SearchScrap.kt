@@ -15,11 +15,11 @@ import org.jsoup.nodes.Document
 fun String.extractSearch(): List<AnimeSearch> {
     val document: Document = Jsoup.parse(this)
     return mutableListOf<AnimeSearch>().apply {
-        val results = document.select(".series")
+        val results = document.select(".heromain div.col-md-4")
         results.forEach { result ->
             val info = result.select(".seriesinfo").text().orEmpty().split(" · ")
             val title = result.select(".seristitles").text().orEmpty()
-            val link = document.select(".heromain a[href]")[0].attr("href").orEmpty()
+            val link = result.select("a[href]").attr("href").orEmpty()
             val image = result.select(".animemainimg").attr("src").orEmpty()
             add(
                 AnimeSearch(

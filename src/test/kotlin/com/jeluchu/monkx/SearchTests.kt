@@ -30,7 +30,7 @@ class SearchTests {
             )
         )
 
-        val result = runBlocking { Monkx.getSearchAnime("Steins;Gate") }
+        val result = runBlocking { Monkx.getSearchAnime("Shigatsu wa Kimi no Uso") }
 
         assertEquals(expected.first().title, result.first().title)
         assertEquals(expected.first().image, result.first().image)
