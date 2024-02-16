@@ -24,5 +24,15 @@ data class AnimeSearch(
     /**
      * Year for anime.
      */
-    val year: String = String.empty()
+    val year: String = String.empty(),
+
+    /**
+     * Link for anime.
+     */
+    val link: String = String.empty(),
+
+    /**
+     * Id for anime.
+     */
+    val id: String = String.empty()
 )
