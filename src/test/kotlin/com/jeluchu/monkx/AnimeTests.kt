@@ -51,7 +51,7 @@ class AnimeTests {
             )
         )
 
-        val result = runBlocking { Monkx.getAnime("one-piece-sub-espanol") }
+        val result = runBlocking { Monkx.getAnime("shigatsu-wa-kimi-no-uso-sub-espanol") }
 
         assertEquals(anime.type, result.type)
         assertEquals(anime.title, result.title)

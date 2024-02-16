@@ -6,21 +6,15 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
 import okhttp3.ResponseBody.Companion.toResponseBody
 import okhttp3.internal.EMPTY_BYTE_ARRAY
-import org.jsoup.nodes.Document
 
 val commonEmptyHeaders: Headers = Headers.headersOf()
 val commonEmptyRequestBody: RequestBody = EMPTY_BYTE_ARRAY.toRequestBody()
 val commonEmptyResponse: ResponseBody = EMPTY_BYTE_ARRAY.toResponseBody()
 
-fun extractValue(document: Document, label: String): String? {
-    val row = document.select("div.chapterdetls2 table tbody tr:has(td.table1:contains($label))")
-
-    if (row.size == 1) {
-        return row.first()?.select("td:eq(1)")?.text().orEmpty()
-    }
-
-    return null
-}
+fun Int.Companion.zero() = 0
+fun String.Companion.empty() = ""
+fun String.toIdFromView() = replace("https://monoschinos2.com/ver/", "")
+fun String.toIdFromAnime() = replace("https://monoschinos2.com/anime/", "")
 
 fun Headers.toMap(): Map<String, String> {
     val headersMap = mutableMapOf<String, String>()

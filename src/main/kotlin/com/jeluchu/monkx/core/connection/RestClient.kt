@@ -11,33 +11,54 @@ import io.ktor.http.headers
 /**
  * Class that handle request.
  * @param isDebug: a boolean that indicate if you run it on debug or not. If yes, it'll throw exception if something happen.
- * @param url: Custom URL, will use default (Jikan URL) if null or empty.
  */
-class RestClient(private val isDebug: Boolean = false, private val url: String? = null) : MonkxClient() {
+class RestClient(private val isDebug: Boolean = false) : MonkxClient() {
     private val client = httpClient
-    private val usedURL = if (url.isNullOrEmpty()) BASE_URL else url
 
     suspend fun request(endPoint: String): String {
         runCatching {
-            val response = client.get(usedURL + endPoint) {
+            val response = client.get(BASE_URL + endPoint) {
                 headers {
                     append(HttpHeaders.Accept, "text/html")
                 }
             }
 
             val body = response.bodyAsText()
-            //val contentType = response.headers["Content-Type"]
-            //val te = if (contentType?.equals("text/html", true) == true) {
-            //    gson.fromJson(body, JsonElement::class.java)
-            //} else null
-
             if (response.status.value !in 200..299) {
                 if (response.status.value in 500..599) {
                     val ex = Exception("An internal server error has occurred, code: ${response.status.value}")
                     if (isDebug) throw ex else exceptionHandler(ex)
                 } else {
                     val ex = MonkxException(
-                        "Jikan API returns code ${response.status.value} and body ${body?.toString()}",
+                        "Monkx API returns code ${response.status.value} and body $body",
+                        response.status.value
+                    )
+
+                    if (isDebug) throw ex
+                    else exceptionHandler(ex)
+                }
+            }
+
+            return body
+        }.getOrElse { throwable -> throw throwable }
+    }
+
+    suspend fun request(): String {
+        runCatching {
+            val response = client.get(BASE_URL) {
+                headers {
+                    append(HttpHeaders.Accept, "text/html")
+                }
+            }
+
+            val body = response.bodyAsText()
+            if (response.status.value !in 200..299) {
+                if (response.status.value in 500..599) {
+                    val ex = Exception("An internal server error has occurred, code: ${response.status.value}")
+                    if (isDebug) throw ex else exceptionHandler(ex)
+                } else {
+                    val ex = MonkxException(
+                        "Monkx returns code ${response.status.value} and body $body",
                         response.status.value
                     )
 
