@@ -1,5 +1,8 @@
 package com.jeluchu.monkx.models.episodes
 
+import com.jeluchu.monkx.core.utils.empty
+import com.jeluchu.monkx.core.utils.zero
+
 /**
  * Episode data class.
  */
@@ -7,30 +10,30 @@ data class Episode(
     /**
      * Name for anime.
      */
-    val title: String,
+    val title: String = String.empty(),
 
     /**
      * Number of episode.
      */
-    val episodeNumber: Int,
+    val episodeNumber: Int = Int.zero(),
 
     /**
      * Type for video (Anime, Movie, etc).
      */
-    val type: String,
+    val type: String = String.empty(),
 
     /**
      * Image for anime.
      */
-    val image: String,
+    val image: String = String.empty(),
 
     /**
      * url of episode.
      */
-    val url: String,
+    val url: String = String.empty(),
 
     /**
      * Id of episode.
      */
-    val id: String
+    val id: String = String.empty()
 )

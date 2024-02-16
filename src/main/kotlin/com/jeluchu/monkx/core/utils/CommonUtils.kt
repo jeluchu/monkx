@@ -11,6 +11,8 @@ val commonEmptyHeaders: Headers = Headers.headersOf()
 val commonEmptyRequestBody: RequestBody = EMPTY_BYTE_ARRAY.toRequestBody()
 val commonEmptyResponse: ResponseBody = EMPTY_BYTE_ARRAY.toResponseBody()
 
+fun Int.Companion.zero() = 0
+fun String.Companion.empty() = ""
 fun String.toIdFromView() = replace("https://monoschinos2.com/ver/", "")
 fun String.toIdFromAnime() = replace("https://monoschinos2.com/anime/", "")
 

@@ -20,7 +20,6 @@ dependencies {
     implementation(libs.bundles.ktor)
     implementation(libs.bundles.jsoup)
     implementation(libs.bundles.logger)
-    implementation(libs.bundles.jsunpacker)
     testImplementation(libs.jupiter.junit.api)
     testRuntimeOnly(libs.jupiter.junit.engine)
     implementation(libs.bundles.kotlin.coroutines)
