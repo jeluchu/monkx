@@ -6,7 +6,7 @@ import com.jeluchu.monkx.core.utils.zero
 /**
  * AnimeEpisode data class.
  */
-data class AnimeEpisode(
+open class AnimeEpisode(
     /**
      * Id for episode.
      */
