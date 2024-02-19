@@ -3,7 +3,7 @@ package com.jeluchu.monkx.extractors
 import com.jeluchu.monkx.models.servers.Server
 import org.jsoup.Jsoup
 
-class StreamTapeExtractor() {
+class StreamTapeExtractor {
     private fun videoFromUrl(url: String): Server? {
         val baseUrl = "https://streamtape.com/e/"
         val newUrl = if (!url.startsWith(baseUrl)) {

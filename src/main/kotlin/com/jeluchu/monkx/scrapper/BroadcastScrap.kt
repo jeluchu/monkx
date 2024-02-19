@@ -1,9 +1,7 @@
 package com.jeluchu.monkx.scrapper
 
 import com.jeluchu.monkx.core.utils.toIdFromAnime
-import com.jeluchu.monkx.core.utils.toIdFromView
 import com.jeluchu.monkx.models.broadcast.Broadcast
-import com.jeluchu.monkx.models.servers.Server
 import org.jsoup.nodes.Document
 
 /**
