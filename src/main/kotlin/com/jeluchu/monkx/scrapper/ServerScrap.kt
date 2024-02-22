@@ -1,7 +1,5 @@
 package com.jeluchu.monkx.scrapper
 
-import com.jeluchu.monkx.extractors.OkruExtractor
-import com.jeluchu.monkx.extractors.StreamTapeExtractor
 import com.jeluchu.monkx.models.servers.Server
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -22,16 +20,9 @@ fun String.extractServers(): List<Server> {
         document.select("div.heroarea div.row div.col-md-12 ul.dropcaps li").forEach { server ->
             val urlBase64 = server.select("a").attr("data-player")
             val url = Base64.decode(urlBase64).toString(Charsets.UTF_8).substringAfter("=")
+            val id = server.select("a").text().orEmpty().lowercase()
 
-            when {
-                url.contains("ok") -> if (!url.contains("streamcherry")) add(
-                    OkruExtractor().videosFromUrl(url)
-                )
-                url.contains("streamtape") -> {
-                    val videos = StreamTapeExtractor().videosFromUrl(url)
-                    addAll(videos)
-                }
-            }
+            Server(id = id, url = url)
         }
     }
 }
