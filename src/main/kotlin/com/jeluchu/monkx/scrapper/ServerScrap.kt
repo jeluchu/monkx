@@ -22,7 +22,7 @@ fun String.extractServers(): List<Server> {
             val url = Base64.decode(urlBase64).toString(Charsets.UTF_8).substringAfter("=")
             val id = server.select("a").text().orEmpty().lowercase()
 
-            Server(id = id, url = url)
+            add(Server(id = id, url = url))
         }
     }
 }

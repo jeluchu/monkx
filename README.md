@@ -12,7 +12,7 @@ repositories {
 }  
   
 dependencies {  
-	implementation("com.github.jeluchu:monkx:1.0.7")
+	implementation("com.github.jeluchu:monkx:1.0.8")
 }  
 ```  
 # Example
