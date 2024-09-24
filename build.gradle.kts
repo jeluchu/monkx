@@ -1,56 +1,6 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-    alias(libs.plugins.jetbrains.kotlin.android)
-    id("maven-publish")
-    id("org.jetbrains.dokka") version "0.10.1"
-}
-
-repositories {
-    google()
-    mavenCentral()
-    gradlePluginPortal()
-    maven("https://jitpack.io")
-    maven("https://kotlin.bintray.com/ktor")
-    maven("https://kotlin.bintray.com/kotlinx")
-}
-
-group = "com.jeluchu.monkx"
-version = "1.0.8"
-
-dependencies {
-    implementation(libs.bundles.ktor)
-    implementation(libs.bundles.jsoup)
-    implementation(libs.bundles.logger)
-    testImplementation(libs.jupiter.junit.api)
-    testRuntimeOnly(libs.jupiter.junit.engine)
-    implementation(libs.bundles.kotlin.coroutines)
-}
-
-tasks {
-    compileKotlin {
-        kotlinOptions.jvmTarget = JavaVersion.VERSION_17.toString()
-    }
-    compileTestKotlin {
-        kotlinOptions.jvmTarget = JavaVersion.VERSION_17.toString()
-    }
-
-    test {
-        useJUnitPlatform()
-    }
-
-    dokka {
-        outputFormat = "html"
-        outputDirectory = "$rootDir/docs"
-    }
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            groupId = "com.github.jeluchu"
-            artifactId = "monkx"
-            version = "1.0.8"
-
-            from(components["kotlin"])
-        }
-    }
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.jetbrains.kotlin.android) apply false
+    alias(libs.plugins.android.library) apply false
 }
