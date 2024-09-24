@@ -52,12 +52,14 @@ dependencies {
 
 publishing {
     publications {
-        create<MavenPublication>("maven") {
+        register<MavenPublication>("release") {
+            afterEvaluate {
+                from(components["release"])
+            }
+
             groupId = "com.github.jeluchu"
             artifactId = "monkx"
             version = "1.1.2"
-
-            from(components["kotlin"])
         }
     }
 }
