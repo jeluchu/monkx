@@ -3,21 +3,15 @@ package com.jeluchu.monkx
 import android.content.Context
 import com.jeluchu.monkx.core.connection.RestClient
 import com.jeluchu.monkx.models.anime.AnimeInfo
-import com.jeluchu.monkx.models.broadcast.Broadcast
 import com.jeluchu.monkx.models.calendar.WeekCalendar
 import com.jeluchu.monkx.models.episodes.Episode
 import com.jeluchu.monkx.models.search.AnimeSearch
 import com.jeluchu.monkx.models.servers.Server
 import com.jeluchu.monkx.scrapper.extractAnime
-import com.jeluchu.monkx.scrapper.extractBroadcast
 import com.jeluchu.monkx.scrapper.extractCalendar
 import com.jeluchu.monkx.scrapper.extractEpisodes
 import com.jeluchu.monkx.scrapper.extractSearch
 import com.jeluchu.monkx.scrapper.extractServers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
 
 object Monkx {
     private var restClient = RestClient()
@@ -61,24 +55,4 @@ object Monkx {
      */
     suspend fun getCalendar(): WeekCalendar =
         restClient.request("calendario").extractCalendar()
-
-
-    /**
-     * Function to get the anime that are currently on air.
-     * @return Links of animes
-     * @see Broadcast
-     */
-    suspend fun getBroadcast(): List<Broadcast> {
-        val firstPage = restClient.request("emision")
-        val document: Document = Jsoup.parse(firstPage)
-        val paginationElements = document.select("div.pagination ul.pagination li.page-item:not(.disabled) a.page-link")
-
-        return document.extractBroadcast().apply {
-            for (page in 2..paginationElements.size) {
-                val reqPage = restClient.request("emision?p=$page")
-                addAll(Jsoup.parse(reqPage).extractBroadcast())
-                runBlocking { delay(3000) }
-            }
-        }
-    }
 }

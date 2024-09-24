@@ -1,4 +1,4 @@
-package com.jeluchu.monkx.legacy.models.scrapper
+package com.jeluchu.monkx.core.components
 
 import android.annotation.SuppressLint
 import android.content.Context

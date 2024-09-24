@@ -1,11 +1,12 @@
 package com.jeluchu.monkx.scrapper
 
 import android.content.Context
-import com.ead.lib.monoschinos.core.chapterRequester
-import com.ead.lib.monoschinos.core.regexRequested
-import com.ead.lib.monoschinos.core.system.extensions.toEpisodeList
+import com.jeluchu.monkx.core.extensions.toEpisodeList
 import com.jeluchu.monkx.core.utils.AnimeDetailStructure
-import com.jeluchu.monkx.legacy.util.Scrapper
+import com.jeluchu.monkx.core.utils.Properties
+import com.jeluchu.monkx.core.utils.Scrapper
+import com.jeluchu.monkx.core.utils.chapterRequester
+import com.jeluchu.monkx.core.utils.regexRequested
 import com.jeluchu.monkx.models.anime.AnimeEpisode
 import com.jeluchu.monkx.models.anime.AnimeInfo
 import org.json.JSONArray
@@ -30,7 +31,7 @@ suspend fun String.extractAnime(context: Context, id: String): AnimeInfo {
     val cover = document.select(AnimeDetailStructure.COVER_IMAGE).first()?.attr("src").orEmpty()
     val synopsis = document.select(AnimeDetailStructure.SYNOPSIS).text().replace(" Ver menos", "")
 
-    val  data = Scrapper.evaluate(Properties.HOME_PAGE + Properties.ANIME_QUERY + id, code = chapterRequester, regex = regexRequested)
+    val data = Scrapper.evaluate(Properties.HOME_PAGE + Properties.ANIME_QUERY + id, code = chapterRequester, regex = regexRequested)
     val episodes = JSONArray(data).toEpisodeList().map { episode ->
         AnimeEpisode(
             number = episode.number,

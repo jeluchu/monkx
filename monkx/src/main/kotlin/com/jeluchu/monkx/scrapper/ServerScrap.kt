@@ -1,5 +1,7 @@
 package com.jeluchu.monkx.scrapper
 
+import com.jeluchu.monkx.core.utils.AnimeDetailStructure
+import com.jeluchu.monkx.core.utils.ServerStructure
 import com.jeluchu.monkx.models.servers.Server
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -16,13 +18,10 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 @OptIn(ExperimentalEncodingApi::class)
 fun String.extractServers(): List<Server> {
     val document: Document = Jsoup.parse(this)
-    return mutableListOf<Server>().apply {
-        document.select("div.heroarea div.row div.col-md-12 ul.dropcaps li").forEach { server ->
-            val urlBase64 = server.select("a").attr("data-player")
-            val url = Base64.decode(urlBase64).toString(Charsets.UTF_8).substringAfter("=")
-            val id = server.select("a").text().orEmpty().lowercase()
-
-            add(Server(id = id, url = url))
-        }
+    return document.select(ServerStructure.SERVER_LIST).map { server ->
+        Server(
+            id = server.text(),
+            url = Base64.decode(server.attr(ServerStructure.DATA_PLAYER)).toString(Charsets.UTF_8)
+        )
     }
 }

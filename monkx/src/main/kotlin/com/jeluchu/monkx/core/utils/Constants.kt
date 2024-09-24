@@ -11,6 +11,38 @@ object AnimeDetailStructure {
     const val GENRES = "span.badge.bg-secondary"
 }
 
+object SearchStructure {
+    const val CLASS_LIST = "li.col.mb-5.ficha_efecto"
+    const val TITLE = "a h3"
+    const val TYPE = "a div div span"
+    const val YEAR = "a span.text-muted"
+    const val IMAGE = "a div img"
+    const val URL = "a"
+}
+
+object ServerStructure {
+    const val DATA_PLAYER = "data-player"
+    const val SERVER_LIST = "button.play-video"
+}
+
+object LastEpisodesStructure {
+    const val CLASS_LIST = "li.col.mb-4:not(.ficha_efecto)"
+    const val TITLE = "article h2"
+    const val NUMBER = "article a div span.episode"
+    const val TYPE = "article span.my-1"
+    const val IMAGE = "article a div img"
+    const val URL = "article a"
+}
+
+object CalendarStructure {
+    const val TITLE = "h3"
+    const val IMAGE = "img"
+    const val IMAGE_ATTR = "data-src"
+    const val URL = "a"
+    const val URL_ATTR = "a"
+    const val EPISODE_NUMBER = "span.badge"
+}
+
 object Properties {
 
     const val BASE_URL = "https://darkryh.github.io/MonosChinosApi/"

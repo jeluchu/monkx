@@ -5,8 +5,8 @@ plugins {
 }
 
 android {
-    namespace = "com.ead.lib.monoschinos"
-    compileSdk = 34
+    namespace = "com.jeluchu.monkx"
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 23
@@ -25,11 +25,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 }
 
@@ -40,35 +40,26 @@ publishing {
                 from(components["release"])
             }
 
-            groupId = "com.ead.lib"
-            artifactId = "monoschinos"
-            version = "0.0.8"
+            groupId = "com.jeluchu"
+            artifactId = "monkx"
+            version = "1.1.0"
         }
     }
 }
 
 dependencies {
+    testImplementation(libs.junit)
     implementation(libs.bundles.ktor)
     implementation(libs.bundles.jsoup)
     implementation(libs.bundles.logger)
+    implementation(libs.androidx.webkit)
+    implementation(libs.bundles.jeluchu)
     implementation(libs.androidx.monitor)
+    testImplementation(libs.junit.jupiter)
+    implementation(libs.androidx.appcompat)
     testImplementation(libs.jupiter.junit.api)
     testRuntimeOnly(libs.jupiter.junit.engine)
     implementation(libs.bundles.kotlin.coroutines)
-
-    implementation(libs.androidx.appcompat)
-    testImplementation(libs.junit)
-    testImplementation(libs.junit.jupiter)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation(libs.androidx.webkit)
-
-    implementation("com.github.jeluchu:cloudflarepass:0.0.1")
-
-    // define a BOM and its version
-    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.12.0"))
-
-    // define any required OkHttp artifacts without version
-    implementation("com.squareup.okhttp3:okhttp")
-    implementation("com.squareup.okhttp3:logging-interceptor")
 }

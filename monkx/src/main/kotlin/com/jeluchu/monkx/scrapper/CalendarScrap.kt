@@ -1,9 +1,12 @@
 package com.jeluchu.monkx.scrapper
 
+import com.jeluchu.monkx.core.extensions.getSrcAttr
+import com.jeluchu.monkx.core.utils.CalendarStructure
 import com.jeluchu.monkx.models.calendar.AnimeCalendar
 import com.jeluchu.monkx.models.calendar.WeekCalendar
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import java.util.Locale
 
 /**
  * Extract the information from the following website
@@ -13,23 +16,18 @@ import org.jsoup.nodes.Document
 fun String.extractCalendar(): WeekCalendar {
     val document: Document = Jsoup.parse(this)
 
-    val days = document.select("div.accordionItem") // Selecciona todas las secciones de días
-
+    val days = listOf("lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo")
     return WeekCalendar().apply {
         days.forEachIndexed { index, day ->
-            val series = day.select("div.row div.series")
+            val series = document.select("div#${day}-tap-pane ul li")
             val animes = mutableListOf<AnimeCalendar>().apply {
-                for (serie in series) {
-                    val title = serie.select("h3").text()
-                    val number = serie.select("h4").text()
-                    val image = serie.select("div.seriesimg a img").attr("data-src")
-                    val genres = serie.select("div.seriesbtns a").eachText()
+                for (anime in series) {
                     add(
                         AnimeCalendar(
-                            title = title,
-                            image = image,
-                            genres = genres,
-                            episodeNumber = extractEpisodeNumber(number),
+                            title = anime.select(CalendarStructure.TITLE).text(),
+                            image = anime.select(CalendarStructure.IMAGE).getSrcAttr(),
+                            link = anime.select(CalendarStructure.URL).attr(CalendarStructure.URL_ATTR),
+                            episodeNumber = anime.select(CalendarStructure.EPISODE_NUMBER).text().removeRange(0..9).toIntOrNull() ?: 1
                         )
                     )
                 }
@@ -46,10 +44,4 @@ fun String.extractCalendar(): WeekCalendar {
             }
         }
     }
-}
-
-fun extractEpisodeNumber(text: String): Int {
-    val regex = Regex("\\bCapitulo (\\d+)\\b")
-    val matchResult = regex.find(text)
-    return matchResult?.groupValues?.get(1)?.toInt() ?: 0
 }

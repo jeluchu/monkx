@@ -1,9 +1,9 @@
-package com.ead.lib.monoschinos.models.home
+package com.jeluchu.monkx.core.models
 
-data class HomeChapter(
-    val title : String,
+import com.jeluchu.monkx.core.utils.Properties
+
+data class Episode(
     val number : Int,
-    val type : String,
     val image : String,
     val url : String
 ) {

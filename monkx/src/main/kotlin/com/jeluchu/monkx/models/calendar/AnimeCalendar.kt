@@ -23,7 +23,7 @@ data class AnimeCalendar(
     val image: String = String.empty(),
 
     /**
-     * List of genres.
+     * link for anime.
      */
-    val genres: List<String> = emptyList()
+    val link: String = String.empty()
 )
