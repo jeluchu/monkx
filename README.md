@@ -1,6 +1,8 @@
-[![](https://jitpack.io/v/darkryh/MonosChinosApi.svg)](https://jitpack.io/#darkryh/MonosChinosApi)
 
-Api lib with similar patron as a Builder Pattern + Builded with kotlin + Kotlin Coroutines :balloon:
+![Monkx Banner](https://raw.githubusercontent.com/jeluchu/monkx/develop/assets/monkx.png)    
+[![Discord Server](https://img.shields.io/discord/460491088004907029.svg?style=flat&logo=discord)](https://discord.gg/2DZHfxv9XN)  [![](https://jitpack.io/v/jeluchu/monkx.svg)](https://jitpack.io/#jeluchu/monkx)
+
+Wrapper for [MonosChinos Web](https://monoschinos2.com/) build using Kotlin + Kotlin DSL + Coroutines power 🚀
 
 # Installation
 with Gradle
@@ -10,129 +12,117 @@ repositories {
 }  
   
 dependencies {  
-	implementation("com.github.darkryh:MonosChinosApi:$version")
+	implementation("com.github.jeluchu:monkx:1.0.0")
 }  
 ```  
-# Example to get HomePage
-```kotlin
-ViewModel() {
+# Example
+```kotlin  
+fun main() {  
+	val anime = runBlocking { Monkx.getAnime("shigatsu-wa-kimi-no-uso-sub-espanol") } 
+	println(anime.title) // Prints: Shigatsu wa Kimi no Uso
+}  
+```      
 
-	fun getHome(context : Context) = viewModelScope.launch(IO) {
+# Available requests
 
-		val home : Home? = MonosChinos
-                .builder(context)
-                .homePage()
-                .get()
-				
-		val lastChapter : List<HomeChapter> = home?.lastChapters
-		val recentSeries : List<HomeAnime> = home?.recentSeries
-	}
-}
-```
-# Example to Search Anime
-```kotlin
-ViewModel() {
+- **Search:** Using Monkx, you can call the request, `getSearchAnime(anime: String)` and after passing it the query from which you want to obtain information it will return a list.
 
-	fun getAnimes(context : Context) = viewModelScope.launch(IO) {
+- **Anime:** Using Monkx, you can call the request, `getAnime(anime: String)` and after passing it the query from which you want to obtain information it will return a object.
 
-		val animeList : List<Anime> = MonosChinos
-                .builder(context)
-                .searchPage("death note")
-                .get()
-	}
-}
-```
+- **Servers:** Using Monkx, you can call the request, `getServers(id: String)` and after passing it the query from which you want to obtain information it will return a list with available servers.
 
-# Example to get Anime Details
-```kotlin
-ViewModel() {
+- **Last Episodes:** Using Monkx, you can call the request, `getLastEpisodes()` and after calling this method, the request will return a list of all recent episodes.
 
-	fun getAnimes(context : Context) = viewModelScope.launch(IO) {
+- **Calendar:** Using Monkx, you can call the request, `getCalendar()` and after calling this method, the request will return a list of all animes in the week.
 
-		val animeList : List<Anime> = MonosChinos
-                .builder(context)
-                .searchPage("death note")
-                .get()
-			
-		val anime = animeList.first()
-			
-		//the seo is the id set the query
-			
-		val animeDetail = MonosChinos
-                .builder(context)
-                .animeDetailPage(anime.seo)
-                .get()
-	}
-}
-```
-# Requests
-- **Home** : the function homePage().get() return a list
-- **Player** : the function playerPager(seo : String).get() return a Player?, the server options
-- **Search** : the function searchPage(name : String).get() return a list
-- **AnimeDetail** : the function animeDetailPage(seo : String) return AnimeDetail?
-- **Chapters** : the function chaptersPage(seo : String) return a list
+- **Broadcast:** Using Monkx, you can call the request, `getBroadcast()` and after calling this method, the request will return a list of all animes on air. ***(Note: This request has a delay of 3 seconds per request as it makes requests for all the pages that are available.)***
 
-# Objects
-```kotlin
-data class Home(
-    val lastChapters : List<HomeChapter>,
-    val recentSeries : List<HomeAnime>
+# Objets
+
+### Search return AnimeSearch object
+```kotlin  
+data class AnimeSearch(  
+	val title: String,  
+	val image: String,  
+	val type: String,  
+	val year: String  
 )
 ```
-```kotlin
-data class HomeAnime(
-    val seo : String,
-    val title : String,
-    val type : String,
-    val image : String,
-    val url : String
+
+### Anime return AnimeInfo object
+```kotlin  
+data class AnimeInfo(  
+	val title: String,  
+	val image: String,  
+	val cover: String,  
+	val synopsis: String,  
+	val state: String,  
+	val type: String,  
+	val genres: List<String>,  
+	val episodesCount: Int,  
+	val episodes: List<AnimeEpisode>
+)
+
+// AnimeEpisode is this object
+data class AnimeEpisode(  
+	val id: String,  
+	val number: Int  
 )
 ```
-```kotlin
-data class HomeChapter(
-    val seo : String,
-    val title : String,
-    val number : Int,
-    val type : String,
-    val image : String,
-    val url : String
+
+### Servers return Server object
+```kotlin  
+data class AnimeInfo(  
+	val id: String,  
+	val url: String
 )
 ```
-```kotlin
-data class Anime(
-    val seo : String,
-    val title : String,
-    val type : String,
-    val year : Int,
-    val image : String,
-    val url : String
+
+### LastEpisodes return Server object
+```kotlin  
+data class Episode(  
+	val title: String,  
+	val episodeNumber: Int,  
+	val type: String,  
+	val image: String,   
+	val url: String,  
+	val id: String  
 )
 ```
-```kotlin
-data class AnimeDetail(
-    val title : String,
-    val alternativeTitle : String?,
-    val status : String,
-    val coverImage : String,
-    val profileImage : String,
-    val release : String,
-    val synopsis : String,
-    val genres : List<String>
+
+### Calendar return WeekCalendar object
+```kotlin  
+data class WeekCalendar(  
+	var monday: List<AnimeCalendar>,   
+	var tuesday: List<AnimeCalendar>,  
+	var wednesday: List<AnimeCalendar>,  
+	var thursday: List<AnimeCalendar>,  
+	var friday: List<AnimeCalendar>,  
+	var saturday: List<AnimeCalendar>,  
+	var sunday: List<AnimeCalendar>
+)
+
+// AnimeCalendar is this object
+data class AnimeCalendar(  
+	val title: String,  
+	val episodeNumber: Int,  
+	val image: String,  
+	val genres: List<String>  
 )
 ```
-```kotlin
-data class Episode(
-    val seo : String,
-    val number : Int,
-    val image : String,
-    val url : String
+
+### Broadcast return Broadcast object
+```kotlin  
+data class Broadcast(   
+	val title: String,  
+	val url: String,  
+	val image: String,  
+	val id: String  
 )
 ```
-```kotlin
-data class Player(
-    val options : List<String>,
-    val downloads : List<String>
-)
-```
-# Want to Contribute
-No problem sr, just contact me in my X account @Darkryh or just make a request.
+
+# Release
+For latest release or to check the changelogs, please check Release tab.
+
+# Contribution
+Want to help? I'm very open to contributors so just do it or contact me if you have any question (Discord: jeluchu)
