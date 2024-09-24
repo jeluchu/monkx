@@ -33,20 +33,6 @@ android {
     }
 }
 
-publishing {
-    publications {
-        register<MavenPublication>("release") {
-            afterEvaluate {
-                from(components["release"])
-            }
-
-            groupId = "com.jeluchu"
-            artifactId = "monkx"
-            version = "1.1.0"
-        }
-    }
-}
-
 dependencies {
     testImplementation(libs.junit)
     implementation(libs.bundles.ktor)
@@ -62,4 +48,16 @@ dependencies {
     implementation(libs.bundles.kotlin.coroutines)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "com.github.jeluchu"
+            artifactId = "monkx"
+            version = "1.1.2"
+
+            from(components["kotlin"])
+        }
+    }
 }

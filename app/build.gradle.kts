@@ -9,16 +9,11 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.ead.app.monoschinos"
+        applicationId = "com.jeluchu.monkxapp"
         minSdk = 23
         targetSdk = 35
         versionCode = 1
-        versionName = "1.0"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        versionName = "1.0.0"
     }
 
     buildTypes {
